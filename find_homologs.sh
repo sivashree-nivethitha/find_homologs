@@ -13,3 +13,8 @@ fi
 query="$1"
 subject="$2"
 output="$3"
+
+# "6 std qlen" = the 12 standard tabular columns plus query length as $13,
+# so each hit is compared against the length of its own query sequence.
+tblastn -query "$query" -subject "$subject" -outfmt "6 std qlen" \
+    | awk '$3 > 30 && $4 > 0.9 * $13' > "$output"
